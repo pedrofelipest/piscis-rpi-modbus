@@ -4,7 +4,7 @@ HOST = '192.168.0.147'
 
 client = ModbusTcpClient(HOST)
 
-ReadHoldingRegister(address, bytes=1):
+def ReadHoldingRegister(address, bytes=1):
     global client
     data = 0
     for i in range(2):
@@ -13,7 +13,7 @@ ReadHoldingRegister(address, bytes=1):
     
     return data
 
-ReadDiscreteInputs(address, bytes=1):
+def ReadDiscreteInputs(address, bytes=1):
     global client
     data = 0
     for i in range(2):
@@ -22,7 +22,7 @@ ReadDiscreteInputs(address, bytes=1):
     
     return data
 
-ReadCoils(address, bits=8):
+def ReadCoils(address, bits=8):
     global client
     data = 0
     for i in range(2):
