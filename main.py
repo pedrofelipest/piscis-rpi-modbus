@@ -25,11 +25,12 @@ client = ModbusTcpClient(host=HOST, port=PORT)
 def resetPort(port):
     global client
 
-    for i in range(3):
-        client.write_coils(port,1)
-
     client.write_coils(port,1)
-    sleep(3)
+    client.write_coils(port,1)
+    client.write_coils(port,1)
+    sleep(4)
+    client.write_coils(port,0)
+    client.write_coils(port,0)
     client.write_coils(port,0)
 
 
