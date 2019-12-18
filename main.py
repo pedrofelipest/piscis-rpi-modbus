@@ -27,9 +27,13 @@ def resetPort(port):
 
     client.write_coils(port,1)
     client.write_coils(port,1)
+    sleep(.1)
+    client.write_coils(port,1)
     client.write_coils(port,1)
     sleep(4)
     client.write_coils(port,0)
+    client.write_coils(port,0)
+    sleep(.1)
     client.write_coils(port,0)
     client.write_coils(port,0)
 
