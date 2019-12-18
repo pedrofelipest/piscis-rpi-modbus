@@ -40,6 +40,7 @@ def ReadHoldingRegister(address, bytes=1):
     for i in range(2):
         r = client.read_holding_registers(address, bytes)
         data = r.registers[0]
+        print(data)
     
     return data
 
@@ -49,6 +50,7 @@ def ReadDiscreteInputs(address, bytes=1):
     for i in range(2):
         r = client.read_discrete_inputs(address, bytes)
         data = r.bits[0]
+        print(data)
     
     return data
 
@@ -58,6 +60,7 @@ def ReadCoils(address, bits=8):
     for i in range(2):
         r = client.read_discrete_inputs(address, bits)
         data = r.bits[0]
+        print(data)
     
     return data
 
