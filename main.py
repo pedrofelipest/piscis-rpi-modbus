@@ -25,17 +25,17 @@ client = ModbusTcpClient(host=HOST, port=PORT)
 def resetPort(port):
     global client
 
-    client.write_coils(port,1)
-    client.write_coils(port,1)
+    client.write_coil(port,1)
+    client.write_coil(port,1)
     sleep(.1)
-    client.write_coils(port,1)
-    client.write_coils(port,1)
+    client.write_coil(port,1)
+    client.write_coil(port,1)
     sleep(4)
-    client.write_coils(port,0)
-    client.write_coils(port,0)
+    client.write_coil(port,0)
+    client.write_coil(port,0)
     sleep(.1)
-    client.write_coils(port,0)
-    client.write_coils(port,0)
+    client.write_coil(port,0)
+    client.write_coil(port,0)
 
 
 def ReadHoldingRegister(address, bytes=1):
