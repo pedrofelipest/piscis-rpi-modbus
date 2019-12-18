@@ -67,26 +67,26 @@ def ReadCoils(address, bits=8):
 resetPort(RS485)
 
 resetPort(ORP)
-orp = ReadHoldingRegister(8005)
+orp = ReadHoldingRegister(8006)
 
 resetPort(CONDUTIVIDADE)
-condutividade = ReadHoldingRegister(8002)
+condutividade = ReadHoldingRegister(8008)
 
 resetPort(TURBIDEZ)
 turbidez = ReadHoldingRegister(8004)
 
 resetPort(PH)
-ph = ReadHoldingRegister(8001)
+ph = ReadHoldingRegister(8010)
 
 resetPort(OD)
-od = ReadHoldingRegister(8003)
+od = ReadHoldingRegister(8000)
 
 resetPort(TEMPERATURA)
-temperatura = ReadHoldingRegister(8010)
+temperatura = ReadHoldingRegister(8002)
 
 alimentador = ReadCoils(16004)
-aerador = ReadCoils(16001)
-filtro = ReadCoils(16000)
+aerador = ReadCoils(16000)
+filtro = ReadCoils(16001)
 emergencia = ReadDiscreteInputs(16000)
 
 resetPort(T_AB)
