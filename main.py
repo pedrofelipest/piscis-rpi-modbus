@@ -162,3 +162,15 @@ print(r.status_code)
 
 r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":fator_potencia,"sensor":16, "location":1})
 print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":alimentador,"perifheral":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":aerador,"perifheral":2})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":filtro,"perifheral":3})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":emergencia,"perifheral":4})
+print(r.status_code)
