@@ -1,5 +1,6 @@
 from pymodbus.client.sync import ModbusTcpClient
 from time import sleep
+import requests
 
 HOST = '10.106.23.17'
 PORT = 502
@@ -130,4 +131,5 @@ res = {'orp':orp,
        'fator_potencia':fator_potencia
        }
 
-print(res)
+for i in res:
+    print(i)
