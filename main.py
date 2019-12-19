@@ -130,6 +130,35 @@ res = {'orp':orp,
        'i_media_abc':i_media_abc,
        'fator_potencia':fator_potencia
        }
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":condutividade,"sensor":1, "location":1})
+print(r.status_code)
 
-for i in res:
-    print(i)
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":ph,"sensor":3, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":orp,"sensor":4, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":od,"sensor":5, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":t_ab,"sensor":10, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":t_bc,"sensor":11, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":t_ac,"sensor":12, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":e_ativa,"sensor":13, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":e_reativa,"sensor":14, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":i_media_abc,"sensor":15, "location":1})
+print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":fator_potencia,"sensor":16, "location":1})
+print(r.status_code)
