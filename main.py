@@ -3,6 +3,7 @@ from time import sleep
 import requests
 
 HOST = '192.168.0.52'
+
 PORT = 502
 
 RS485 = 49000
