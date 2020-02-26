@@ -2,7 +2,7 @@ from pymodbus.client.sync import ModbusTcpClient
 from time import sleep
 import requests
 
-HOST = '10.106.23.17'
+HOST = '192.168.0.52'
 PORT = 502
 
 RS485 = 49000
@@ -15,10 +15,11 @@ PH = 49048
 T_AB = 49160
 T_BC = 49168
 T_AC = 49176
-E_ATIVA = 49184
-E_REATIVA = 49192
-I_MEDIA_ABC = 49200
-FATOR_POTENCIA = 49208
+#E_ATIVA = 49184
+#E_REATIVA = 49192
+#P_APARENTE = 49200
+#I_MEDIA_ABC = 49200
+#FATOR_POTENCIA = 49208
 
 
 client = ModbusTcpClient(host=HOST, port=PORT)
@@ -38,8 +39,7 @@ def resetPort(port):
     client.write_coil(port,0)
     client.write_coil(port,0)
 
-
-def ReadHoldingRegister(address, bytes=1):
+def ReadHoldingRegister(address, bytes=4):
     global client
     data = 0
     for i in range(2):
@@ -61,56 +61,60 @@ def ReadCoils(address, bits=8):
     global client
     data = 0
     for i in range(2):
-        r = client.read_discrete_inputs(address, bits)
+        r = client.read_coils(address, bits)
         data = r.bits[0]
-    
+   
     return data
 
 resetPort(RS485)
+
+resetPort(OD)
+od = ReadHoldingRegister(8000)/100.00
+
+resetPort(TURBIDEZ)
+turbidez = ReadHoldingRegister(8004)/10.0
 
 resetPort(ORP)
 orp = ReadHoldingRegister(8006)
 
 resetPort(CONDUTIVIDADE)
-condutividade = ReadHoldingRegister(8008)
-
-resetPort(TURBIDEZ)
-turbidez = ReadHoldingRegister(8004)
+condutividade = ReadHoldingRegister(8008)*2000/65535.00
 
 resetPort(PH)
-ph = ReadHoldingRegister(8010)/100
-
-resetPort(OD)
-od = ReadHoldingRegister(8000)
+ph = ReadHoldingRegister(8010)/100.00
 
 resetPort(TEMPERATURA)
-temperatura = ReadHoldingRegister(8002)/10
+temperatura = ReadHoldingRegister(8002)/10.0
 
-alimentador = ReadCoils(16004)
-aerador = ReadCoils(16000)
-filtro = ReadCoils(16001)
-emergencia = ReadDiscreteInputs(16000)
+#aerador = ReadCoils(16000)
+#filtro = ReadCoils(16001)
+#alimentador = ReadCoils(16002)
+
+#emergencia = ReadDiscreteInputs(16000)
 
 resetPort(T_AB)
-t_ab = ReadHoldingRegister(8020)
+t_ab = ReadHoldingRegister(8020)*400.00/17678.5
 
 resetPort(T_BC)
-t_bc = ReadHoldingRegister(8052)
+t_bc = ReadHoldingRegister(8022)*400.00/17763.4
 
 resetPort(T_AC)
-t_ac = ReadHoldingRegister(8024)
+t_ac = ReadHoldingRegister(8024)*400.00/17817.2
 
-resetPort(E_ATIVA)
-e_ativa = ReadHoldingRegister(8026)
+#resetPort(E_ATIVA)
+#e_ativa = ReadHoldingRegister(8026)
 
-resetPort(E_REATIVA)
-e_reativa = ReadHoldingRegister(8028)
+#resetPort(E_REATIVA)
+#e_reativa = ReadHoldingRegister(8028)*400.00/32767.00
 
-resetPort(I_MEDIA_ABC)
-i_media_abc = ReadHoldingRegister(8030)
+#resetPort(P_APARENTE)
+#p_aparente = ReadHoldingRegister(8028)*400.00/32767.00
 
-resetPort(FATOR_POTENCIA)
-fator_potencia = ReadHoldingRegister(8032)
+#resetPort(I_MEDIA_ABC)
+#i_media_abc = ReadHoldingRegister(8030)*5/482272.75
+
+#resetPort(FATOR_POTENCIA)
+#fator_potencia = ReadHoldingRegister(8032)*400/6641336.117
 
 res = {'orp':orp,
        'condutividade':condutividade,
@@ -118,17 +122,18 @@ res = {'orp':orp,
        'ph':ph,
        'od':od,
        'temperatura':temperatura,
-       'alimentador':alimentador,
-       'aerador':aerador,
-       'filtro':filtro,
-       'emergencia':emergencia,
+       #'p_aparente':p_aparente,
+       #'alimentador':alimentador,
+       #'aerador':aerador,
+       #'filtro':filtro,
+       #'emergencia':emergencia,
        't_ab':t_ab,
        't_bc':t_bc,
-       't_ac':t_ac,
-       'e_ativa':e_ativa,
-       'e_reativa':e_reativa,
-       'i_media_abc':i_media_abc,
-       'fator_potencia':fator_potencia
+       't_ac':t_ac
+       #'e_ativa':e_ativa,
+       #'e_reativa':e_reativa,
+       #'i_media_abc':i_media_abc,
+       #'fator_potencia':fator_potencia
        }
 r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":condutividade,"sensor":1, "location":1})
 print(r.status_code)
@@ -142,35 +147,43 @@ print(r.status_code)
 r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":od,"sensor":5, "location":1})
 print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":t_ab,"sensor":10, "location":1})
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":round(t_ab,2),"sensor":10, "location":1})
 print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":t_bc,"sensor":11, "location":1})
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":round(t_bc,1),"sensor":11, "location":1})
 print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":t_ac,"sensor":12, "location":1})
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":round(t_ac,2),"sensor":12, "location":1})
 print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":e_ativa,"sensor":13, "location":1})
+#r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":e_ativa,"sensor":13, "location":1})
+#print(r.status_code)
+
+#r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":p_aparente,"sensor":19, "location":1})
+#print(r.status_code)
+
+#r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":i_media_abc,"sensor":15, "location":1})
+#print(r.status_code)
+
+#r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":fator_potencia,"sensor":16, "location":1})
+#print(r.status_code)
+
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":turbidez,"sensor":17, "location":1})
 print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":e_reativa,"sensor":14, "location":1})
+r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":temperatura,"sensor":18, "location":1})
 print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":i_media_abc,"sensor":15, "location":1})
-print(r.status_code)
+#r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":alimentador,"perifheral":1})
+#print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/data', json={"value":fator_potencia,"sensor":16, "location":1})
-print(r.status_code)
+#r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":aerador,"perifheral":2})
+#print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":alimentador,"perifheral":1})
-print(r.status_code)
+#r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":filtro,"perifheral":3})
+#print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":aerador,"perifheral":2})
-print(r.status_code)
+#r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":emergencia,"perifheral":4})
+#print(r.status_code)
 
-r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":filtro,"perifheral":3})
-print(r.status_code)
-
-r  = requests.post('https://piscis-dev.herokuapp.com/perifherals', json={"value":emergencia,"perifheral":4})
-print(r.status_code)
+print(res)
